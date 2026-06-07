@@ -1,0 +1,28 @@
+.site {
+  opacity: 0;
+  transition: opacity 1.2s var(--ease) 0.15s;
+}
+
+.site--visible {
+  opacity: 1;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1.5rem;
+  z-index: 200;
+  padding: 0.625rem 1rem;
+  background: var(--n2);
+  color: var(--b1);
+  letter-spacing: 0.28em;
+  font-size: 0.5rem;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+.mis-toast {
+  backdrop-filter: blur(12px);
+}

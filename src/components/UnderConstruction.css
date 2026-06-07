@@ -1,0 +1,143 @@
+.under {
+  background: var(--n3);
+  padding: 120px var(--section-pad);
+  position: relative;
+  overflow: hidden;
+}
+
+.under::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 55% 60% at 85% 50%, rgba(42, 53, 96, 0.12) 0%, transparent 65%);
+}
+
+.under-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 8vw, 100px);
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.under-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 18px;
+  border-radius: 2px;
+  background: rgba(42, 53, 96, 0.18);
+  border: 0.5px solid rgba(42, 53, 96, 0.35);
+  margin-bottom: 36px;
+}
+
+.ub-text {
+  font-size: 0.53125rem;
+  letter-spacing: 0.42em;
+  color: var(--g0);
+}
+
+.under-h {
+  font-size: clamp(2.375rem, 4.5vw, 3.625rem);
+  line-height: 1.08;
+  color: var(--b1);
+  margin-bottom: 24px;
+}
+
+.under-h em {
+  font-style: italic;
+  color: var(--b4);
+}
+
+.under-body {
+  font-size: 0.84375rem;
+  line-height: 1.78;
+  color: rgba(140, 154, 191, 0.7);
+  margin-bottom: 40px;
+  max-width: 420px;
+}
+
+.email-row {
+  display: flex;
+  max-width: 420px;
+}
+
+.email-in {
+  flex: 1;
+  height: 48px;
+  background: rgba(240, 234, 216, 0.06);
+  border: 0.5px solid rgba(240, 234, 216, 0.14);
+  border-right: none;
+  border-radius: 2px 0 0 2px;
+  padding: 0 18px;
+  font-size: 0.75rem;
+  color: var(--b1);
+  outline: none;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.email-in::placeholder {
+  color: rgba(140, 154, 191, 0.4);
+}
+
+.email-in:focus {
+  background: rgba(240, 234, 216, 0.09);
+  border-color: rgba(107, 122, 160, 0.45);
+}
+
+.email-row .btn {
+  border-radius: 0 2px 2px 0;
+  height: 48px;
+  padding: 0 26px;
+}
+
+.under-note {
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  color: rgba(120, 116, 100, 0.45);
+  margin-top: 18px;
+}
+
+.under-promises {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.promise {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  margin: 0;
+}
+
+.p-line {
+  width: 1.5px;
+  flex-shrink: 0;
+  height: 44px;
+  background: var(--n0);
+  margin-top: 3px;
+}
+
+.p-text {
+  font-size: 1.09375rem;
+  font-style: italic;
+  line-height: 1.65;
+  color: rgba(240, 234, 216, 0.62);
+}
+
+.under-attr {
+  margin-top: 8px;
+  font-size: 0.5625rem;
+  letter-spacing: 0.38em;
+  color: var(--n0);
+}
+
+@media (max-width: 768px) {
+  .under-inner {
+    grid-template-columns: 1fr;
+  }
+}

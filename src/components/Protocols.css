@@ -1,0 +1,103 @@
+.protocols {
+  background: var(--n2);
+}
+
+.protocols .s-label {
+  color: var(--g0);
+}
+
+.protocols .s-h2 {
+  color: var(--b1);
+}
+
+.protocols .s-h2 em {
+  color: var(--b4);
+}
+
+.proto-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  margin-top: 64px;
+  border: 0.5px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.04);
+  gap: 0.5px;
+}
+
+.proto-card {
+  background: rgba(10, 13, 28, 0.55);
+  padding: 0 0 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: background 0.3s;
+  overflow: hidden;
+}
+
+.proto-card:hover {
+  background: rgba(42, 53, 96, 0.2);
+}
+
+.proto-card__figure {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--n1);
+}
+
+.proto-card__figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(0.88) contrast(1.05);
+  transition: transform 0.6s var(--ease);
+}
+
+.proto-card:hover .proto-card__figure img {
+  transform: scale(1.04);
+}
+
+.proto-card__figure-edge {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(10, 13, 28, 0.65) 100%);
+  pointer-events: none;
+}
+
+.proto-card .pc-n,
+.proto-card .pc-title,
+.proto-card .pc-desc {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.pc-n {
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  color: rgba(140, 154, 191, 0.35);
+}
+
+.pc-title {
+  font-size: 1.125rem;
+  color: var(--b1);
+  line-height: 1.2;
+}
+
+.pc-desc {
+  font-size: 0.6875rem;
+  line-height: 1.68;
+  color: rgba(140, 154, 191, 0.62);
+}
+
+@media (max-width: 1024px) {
+  .proto-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .proto-grid {
+    grid-template-columns: 1fr;
+  }
+}

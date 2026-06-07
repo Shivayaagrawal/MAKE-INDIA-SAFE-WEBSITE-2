@@ -1,0 +1,257 @@
+.home-closing {
+  background: var(--b0);
+  overflow: hidden;
+}
+
+.home-closing__pill-wrap {
+  margin-top: 56px;
+  overflow: hidden;
+  padding-left: var(--section-pad);
+  margin-left: calc(-1 * var(--section-pad));
+  margin-right: calc(-1 * var(--section-pad));
+  padding-right: 0;
+}
+
+.home-closing__pill-track {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  padding-right: var(--section-pad);
+  animation: pill-strip-scroll 36s linear infinite;
+}
+
+.home-closing__pill-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes pill-strip-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.pill-card-h {
+  width: min(420px, 78vw);
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: auto 120px 1fr;
+  align-items: center;
+  gap: 18px;
+  padding: 20px 22px;
+  background: var(--b1);
+  border: 0.5px solid var(--b3);
+  border-radius: 4px;
+  transition: border-color 0.35s var(--ease), box-shadow 0.35s var(--ease), transform 0.35s var(--ease);
+}
+
+.pill-card-h:hover {
+  border-color: var(--b4);
+  box-shadow: 0 12px 40px rgba(12, 16, 32, 0.1);
+  transform: translateY(-3px);
+}
+
+.pill-card-h__pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 4px;
+}
+
+.pill-card-h__figure {
+  margin: 0;
+  width: 120px;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--b2);
+}
+
+.pill-card-h__figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s var(--ease-out);
+}
+
+.pill-card-h:hover .pill-card-h__figure img {
+  transform: scale(1.06);
+}
+
+.pill-card-h__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.pill-card-h__tag {
+  font-size: 0.5rem;
+  letter-spacing: 0.38em;
+  color: var(--b5);
+}
+
+.pill-card-h__title {
+  font-size: 1.25rem;
+  line-height: 1.15;
+  color: var(--n2);
+}
+
+.pill-card-h__desc {
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--b6);
+}
+
+/* ── Pie chart block ── */
+.home-closing__chart {
+  margin-top: 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 6vw, 80px);
+  align-items: center;
+  max-width: 960px;
+}
+
+.home-closing__pie-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.home-closing__pie {
+  width: clamp(220px, 28vw, 280px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 24px 64px rgba(12, 16, 32, 0.12),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+  animation: pie-spin-in 1.2s var(--ease-out) both;
+}
+
+@keyframes pie-spin-in {
+  from {
+    opacity: 0;
+    transform: rotate(-40deg) scale(0.88);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+}
+
+.home-closing__pie-center {
+  width: 58%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--b0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: var(--n2);
+  box-shadow: inset 0 0 0 0.5px var(--b3);
+}
+
+.home-closing__legend {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.home-closing__legend-item {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 14px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 3px;
+  border: 0.5px solid transparent;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.home-closing__legend-item:hover {
+  background: var(--b1);
+  border-color: var(--b3);
+}
+
+.home-closing__legend-thumb {
+  margin: 0;
+  width: 56px;
+  aspect-ratio: 1;
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--b2);
+}
+
+.home-closing__legend-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.home-closing__legend-copy {
+  display: grid;
+  grid-template-columns: 10px 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.home-closing__legend-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.home-closing__legend-label {
+  font-size: 0.5rem;
+  letter-spacing: 0.32em;
+  color: var(--b5);
+}
+
+.home-closing__legend-pct {
+  font-size: 1.125rem;
+  color: var(--n2);
+}
+
+@media (max-width: 768px) {
+  .home-closing__chart {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .home-closing__legend {
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .pill-card-h {
+    grid-template-columns: auto 96px 1fr;
+    width: min(380px, 88vw);
+  }
+
+  .pill-card-h__figure {
+    width: 96px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-closing__pill-track {
+    animation: none;
+    flex-wrap: wrap;
+    width: auto;
+  }
+
+  .home-closing__pie {
+    animation: none;
+  }
+}

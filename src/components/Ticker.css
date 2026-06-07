@@ -1,0 +1,46 @@
+.ticker {
+  background: var(--b2);
+  border-top: 0.5px solid var(--b4);
+  border-bottom: 0.5px solid var(--b4);
+  height: 46px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.ticker-inner {
+  display: flex;
+  animation: tick-move 24s linear infinite;
+  white-space: nowrap;
+}
+
+.tick-item {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 28px;
+  font-size: 0.5625rem;
+  letter-spacing: 0.3em;
+  color: var(--b5);
+  border-right: 0.5px solid var(--b4);
+}
+
+.tick-item strong {
+  color: var(--n1);
+  font-weight: 400;
+}
+
+@keyframes tick-move {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-inner {
+    animation: none;
+  }
+}

@@ -1,0 +1,155 @@
+@import './styles/tokens.css';
+@import './styles/typography.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--b1);
+  color: var(--n2);
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+:root {
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--n0);
+  outline-offset: 3px;
+}
+
+::-webkit-scrollbar {
+  width: 2px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--b3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--b5);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Shared section styles ── */
+.section {
+  padding: 120px var(--section-pad);
+}
+
+.section-sm {
+  padding: 80px var(--section-pad);
+}
+
+.s-label {
+  display: block;
+  font-size: 0.5625rem;
+  letter-spacing: 0.48em;
+  text-transform: uppercase;
+  color: var(--n0);
+  margin-bottom: 22px;
+}
+
+.s-h2 {
+  font-size: clamp(2.375rem, 4.8vw, 4rem);
+  font-weight: 300;
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+  color: var(--n2);
+}
+
+.s-h2 em {
+  font-style: italic;
+  color: var(--g1);
+}
+
+/* ── Scroll reveal ── */
+.rv {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.95s var(--ease), transform 0.95s var(--ease);
+}
+
+.rv.on {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.d1 { transition-delay: 0.12s; }
+.d2 { transition-delay: 0.24s; }
+.d3 { transition-delay: 0.36s; }
+.d4 { transition-delay: 0.48s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .rv {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: 80px 1.25rem;
+  }
+
+  .section-sm {
+    padding: 60px 1.25rem;
+  }
+}

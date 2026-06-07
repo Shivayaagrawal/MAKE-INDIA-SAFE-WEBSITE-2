@@ -1,0 +1,80 @@
+.footer {
+  background: var(--n3);
+  border-top: 0.5px solid rgba(255, 255, 255, 0.06);
+  padding: 64px var(--section-pad) 44px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 52px;
+  max-width: 100%;
+}
+
+.f-brand {
+  font-size: 1.125rem;
+  letter-spacing: 0.06em;
+  color: var(--b1);
+  margin-bottom: 10px;
+}
+
+.f-sub {
+  font-size: 0.53125rem;
+  letter-spacing: 0.4em;
+  color: var(--b6);
+  margin-bottom: 22px;
+}
+
+.f-note {
+  font-size: 0.75rem;
+  line-height: 1.78;
+  color: rgba(120, 116, 100, 0.55);
+  max-width: 320px;
+}
+
+.f-col-h {
+  font-size: 0.5625rem;
+  font-weight: 400;
+  letter-spacing: 0.38em;
+  color: var(--b6);
+  margin-bottom: 20px;
+}
+
+.f-link {
+  display: block;
+  font-size: 0.75rem;
+  color: rgba(140, 154, 191, 0.55);
+  text-decoration: none;
+  margin-bottom: 11px;
+  transition: color 0.2s;
+}
+
+.f-link:hover {
+  color: var(--b3);
+}
+
+.f-base {
+  grid-column: 1 / -1;
+  padding-top: 32px;
+  border-top: 0.5px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.f-copy {
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  color: rgba(120, 116, 100, 0.38);
+}
+
+@media (max-width: 900px) {
+  .footer {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    grid-template-columns: 1fr;
+  }
+}

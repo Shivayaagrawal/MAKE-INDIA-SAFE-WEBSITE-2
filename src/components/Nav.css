@@ -1,0 +1,149 @@
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 22px var(--section-pad);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 0.5px solid transparent;
+  transition: all 0.4s var(--ease);
+}
+
+.nav.scrolled {
+  background: rgba(247, 242, 232, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-color: rgba(12, 16, 32, 0.08);
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: var(--n2);
+  line-height: 1;
+  text-decoration: none;
+}
+
+.nav-logo-sub {
+  display: block;
+  font-size: 0.5rem;
+  letter-spacing: 0.42em;
+  color: var(--b5);
+  margin-top: 4px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+.nav-link {
+  font-size: 0.59375rem;
+  letter-spacing: 0.28em;
+  color: var(--b5);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav.scrolled .nav-logo,
+.nav.scrolled .nav-link {
+  color: var(--n2);
+}
+
+.nav.scrolled .nav-logo-sub {
+  color: var(--b5);
+}
+
+.nav:not(.scrolled) .nav-logo {
+  color: var(--b0);
+  font-weight: 400;
+}
+
+.nav.scrolled .nav-logo {
+  color: var(--n2);
+}
+
+.nav:not(.scrolled) .nav-logo-sub {
+  color: rgba(184, 169, 140, 0.65);
+}
+
+.nav:not(.scrolled) .nav-link {
+  color: rgba(184, 169, 140, 0.7);
+}
+
+.nav:not(.scrolled) .nav-link:hover {
+  color: var(--b1);
+}
+
+.nav:not(.scrolled) .nav-dot {
+  color: rgba(184, 169, 140, 0.65);
+}
+
+.nav:not(.scrolled) .btn-ghost {
+  color: var(--b1) !important;
+  border-color: rgba(247, 242, 232, 0.25) !important;
+}
+
+.nav-dot {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.53125rem;
+  letter-spacing: 0.3em;
+  color: var(--b5);
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
+  background: var(--n0);
+  border-radius: 50%;
+  animation: dot-pulse 2.6s ease-in-out infinite;
+}
+
+@keyframes dot-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(0.55);
+  }
+}
+
+@media (min-width: 900px) {
+  .nav-dot {
+    display: flex;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-link {
+    display: none;
+  }
+
+  .nav-right {
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .nav-logo {
+    font-size: 0.9375rem;
+  }
+}

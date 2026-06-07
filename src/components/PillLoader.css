@@ -1,0 +1,135 @@
+.pill-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  background: var(--b1);
+  transition: opacity 1.2s var(--ease-sharp), transform 1.2s var(--ease-sharp);
+}
+
+.pill-loader--exiting {
+  opacity: 0;
+  transform: scale(1.02);
+  pointer-events: none;
+}
+
+.pill-loader__wordmark {
+  text-align: center;
+  opacity: 0;
+  animation: loader-fade-up 1s 0.05s var(--ease) forwards;
+}
+
+.pill-loader__brand {
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: var(--n2);
+  line-height: 1;
+  margin-bottom: 14px;
+}
+
+.pill-loader__sub {
+  font-size: 0.5rem;
+  letter-spacing: 0.48em;
+  color: var(--b5);
+}
+
+.pill-loader__stage {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.25rem;
+  height: 130px;
+  opacity: 0;
+  animation: loader-fade-up 0.9s 0.35s var(--ease) forwards;
+}
+
+.pill-loader__wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.625rem;
+  height: 130px;
+  justify-content: flex-end;
+}
+
+.pill-loader--exiting .pill-loader__wrap {
+  animation: pill-fan-out 0.8s var(--ease-sharp) forwards;
+}
+
+.pill-tag {
+  font-size: 0.5rem;
+  letter-spacing: 0.32em;
+  color: var(--b5);
+  white-space: nowrap;
+  transition: opacity 0.5s var(--ease);
+}
+
+.pill-loader__progress {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  opacity: 0;
+  animation: loader-fade-up 0.7s 0.85s var(--ease) forwards;
+}
+
+.prog-bar {
+  width: 200px;
+  height: 1px;
+  background: rgba(12, 16, 32, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.prog-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--n1), var(--n0));
+  transition: width 0.08s linear;
+}
+
+.prog-num {
+  font-size: 0.8125rem;
+  font-weight: 300;
+  color: var(--b5);
+  min-width: 2.375rem;
+  letter-spacing: 0.04em;
+}
+
+@keyframes pill-fan-out {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--exit-x), var(--exit-y)) rotate(var(--exit-r)) scale(0.82);
+    opacity: 0;
+  }
+}
+
+@keyframes loader-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pill-loader--exiting .pill-loader__wordmark {
+  animation: loader-fade-out 0.6s var(--ease-sharp) forwards;
+}
+
+@keyframes loader-fade-out {
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
