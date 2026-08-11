@@ -1,0 +1,87 @@
+.loading-page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow: hidden;
+  background: #ffffff;
+  color: #111111;
+}
+
+.loading-page--crowd {
+  height: 100vh;
+  height: 100svh;
+}
+
+.loading-page--content {
+  min-height: 100vh;
+  min-height: 100svh;
+  height: auto;
+  overflow: visible;
+  animation: loading-page-fade-in 700ms ease both;
+}
+
+.loading-page__canvas-wrap {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Sit in the upper band so walking peeps (lower half) stay clear */
+.loading-page__hero {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  text-align: center;
+  padding: clamp(1.25rem, 4vh, 2.5rem) 1.5rem 0;
+  height: min(38vh, 20rem);
+  pointer-events: none;
+  animation: loading-page-fade-in 900ms ease both;
+}
+
+.loading-page__brand {
+  margin: 0;
+  font-family: var(--font-brand);
+  font-size: clamp(1.5rem, 4.5vw, 3rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #0a0a0a;
+  max-width: min(92vw, 40rem);
+}
+
+.loading-page__morph {
+  width: 100%;
+}
+
+.loading-page__morph-text {
+  letter-spacing: 0.04em;
+  color: #0a0a0a;
+}
+
+@keyframes loading-page-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .loading-page__hero {
+    height: min(28vh, 12rem);
+    padding-top: clamp(1rem, 5vh, 2rem);
+  }
+
+  .loading-page__brand {
+    font-size: clamp(1.25rem, 6.5vw, 1.85rem);
+  }
+}

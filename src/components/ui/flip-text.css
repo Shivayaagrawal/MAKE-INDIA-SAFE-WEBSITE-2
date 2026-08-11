@@ -1,0 +1,57 @@
+.flip-char {
+  color: inherit;
+  -webkit-text-fill-color: transparent;
+  vertical-align: middle;
+  height: 1.2em;
+  line-height: 1.2em;
+  animation: flip-text-rotate var(--flip-duration, 2.2s) var(--flip-delay, 0s)
+    var(--flip-iteration, infinite) ease;
+}
+
+.flip-char::before,
+.flip-char::after {
+  content: attr(data-char);
+  color: inherit;
+  -webkit-text-fill-color: currentColor;
+  backface-visibility: hidden;
+  width: 100%;
+  height: 100%;
+  animation: flip-text-fade var(--flip-duration, 2.2s) var(--flip-delay, 0s)
+    var(--flip-iteration, infinite) ease;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.flip-char::after {
+  transform: translate(-50%, -50%) translateZ(0.6em);
+}
+
+.flip-char::before {
+  opacity: 0;
+  --opacity: 1;
+  transform: translate(-50%, -50%) rotateX(-90deg) translateZ(0.6em);
+}
+
+@keyframes flip-text-rotate {
+  0% {
+    transform: rotateX(0);
+  }
+  25%,
+  to {
+    transform: rotateX(90deg);
+  }
+}
+
+@keyframes flip-text-fade {
+  0% {
+    opacity: 1;
+  }
+  30%,
+  to {
+    opacity: var(--opacity, 0);
+  }
+}

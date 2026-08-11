@@ -1,0 +1,279 @@
+.reserve {
+  min-height: 100vh;
+  min-height: 100svh;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, #f0f0ee 0%, transparent 55%),
+    var(--bg);
+  color: var(--ink);
+}
+
+.reserve__header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding-block: 1.15rem;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.reserve__header-inner {
+  width: var(--page);
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.reserve__back {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--ink-muted);
+  padding: 0.35rem 0;
+  transition: color 0.2s var(--ease);
+}
+
+.reserve__back:hover {
+  color: var(--ink);
+}
+
+.reserve__brand {
+  margin: 0;
+  font-family: var(--font-brand);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.reserve__main {
+  width: min(36rem, calc(100% - 3rem));
+  margin-inline: auto;
+  padding: clamp(2.5rem, 6vw, 4rem) 0 clamp(4rem, 10vw, 6rem);
+}
+
+.reserve__intro {
+  margin-bottom: 2.5rem;
+}
+
+.reserve__eyebrow {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.reserve__date-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.reserve__date.date-highlight--lg {
+  font-size: clamp(1.25rem, 4vw, 1.85rem);
+  padding: 0.35em 0.7em;
+}
+
+.reserve__date-topic {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--ink-muted);
+}
+
+.reserve__date-inline {
+  display: inline-flex !important;
+  vertical-align: middle;
+  font-size: 0.95em;
+  margin: 0 0.15em;
+}
+
+.date-highlight--md {
+  font-size: 0.95rem;
+  padding: 0.2em 0.5em;
+}
+
+.reserve__intro h1 {
+  margin: 0 0 0.85rem;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+}
+
+.reserve__intro p {
+  margin: 0;
+  color: var(--ink-muted);
+  font-style: italic;
+  max-width: 32rem;
+}
+
+.reserve__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.reserve__row {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .reserve__row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.reserve__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.reserve__field span {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+
+.reserve__field input,
+.reserve__field select,
+.reserve__field textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  font: inherit;
+  font-style: normal;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  outline: none;
+  transition:
+    border-color 0.2s var(--ease),
+    box-shadow 0.2s var(--ease);
+}
+
+.reserve__field input:focus,
+.reserve__field select:focus,
+.reserve__field textarea:focus {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 8%, transparent);
+}
+
+.reserve__field textarea {
+  resize: vertical;
+  min-height: 7rem;
+}
+
+.reserve__field select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink-faint) 50%),
+    linear-gradient(135deg, var(--ink-faint) 50%, transparent 50%);
+  background-position:
+    calc(100% - 1.15rem) calc(50% - 0.15rem),
+    calc(100% - 0.85rem) calc(50% - 0.15rem);
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+
+.reserve__age-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.reserve__age-block .reserve__field {
+  flex: 1;
+}
+
+.reserve__age-hint {
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.8em;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink-faint);
+}
+
+.reserve__age-message {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--ink-muted);
+  max-width: 18rem;
+}
+
+.reserve__peek {
+  align-self: flex-start;
+  font-size: 0.95rem;
+  min-width: 7.5em;
+}
+
+.reserve__peek-cover {
+  background: #6b6b6f !important;
+  font-family: var(--font-brand);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.reserve__actions {
+  margin-top: 0.75rem;
+}
+
+.reserve__actions .liquid-metal-btn,
+.reserve__actions button {
+  width: 100%;
+}
+
+.reserve__actions > div,
+.reserve__actions > button {
+  width: 100%;
+}
+
+.reserve__actions > button > div {
+  width: 100%;
+}
+
+.reserve__actions > button > div > div:last-child {
+  width: 100%;
+  justify-content: center;
+}
+
+.reserve__success {
+  padding-top: 2rem;
+  max-width: 28rem;
+}
+
+.reserve__success h1 {
+  margin: 0 0 1rem;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+}
+
+.reserve__success p {
+  margin: 0 0 2rem;
+  color: var(--ink-muted);
+  font-style: italic;
+}
+
+.reserve__success strong {
+  color: var(--ink);
+  font-style: normal;
+  font-weight: 600;
+}

@@ -1,0 +1,28 @@
+.wave-grid-background {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.wave-grid-background--fixed {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.wave-grid-background--fixed .wave-grid-background__canvas {
+  pointer-events: none;
+}
+
+.wave-grid-background__canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.wave-grid-background__content {
+  position: absolute;
+  inset: 0;
+}
