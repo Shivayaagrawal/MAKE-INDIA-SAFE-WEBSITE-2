@@ -69,6 +69,12 @@ button {
   color: var(--bg);
 }
 
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
 @utility perspective-2000 {
   perspective: 2000px;
 }

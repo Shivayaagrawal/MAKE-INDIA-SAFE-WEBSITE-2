@@ -29,7 +29,7 @@ interface GradientTextProps {
 export default function GradientText({
   children,
   className = '',
-  colors = ['#000000', '#ffffff', '#000000'],
+  colors = ['#000000', '#5a5a5a', '#000000'],
   animationSpeed = 8,
   showBorder = false,
   direction = 'horizontal',
@@ -37,14 +37,27 @@ export default function GradientText({
   yoyo = true,
 }: GradientTextProps) {
   const [isPaused, setIsPaused] = useState(false)
+  const [reduceMotion, setReduceMotion] = useState(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  )
   const progress = useMotionValue(0)
   const elapsedRef = useRef(0)
   const lastTimeRef = useRef<number | null>(null)
 
   const animationDuration = animationSpeed * 1000
 
+  useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const listener = (event: MediaQueryListEvent) =>
+      setReduceMotion(event.matches)
+    query.addEventListener('change', listener)
+    return () => query.removeEventListener('change', listener)
+  }, [])
+
   useAnimationFrame((time) => {
-    if (isPaused) {
+    if (isPaused || reduceMotion) {
       lastTimeRef.current = null
       return
     }

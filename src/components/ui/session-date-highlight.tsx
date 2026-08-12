@@ -1,6 +1,5 @@
 import RotatingText from './rotating-text'
-
-const DATE_TEXTS = ['1 August 2026', '1 Aug 2026', 'Save the date']
+import { getMasterclassDateTexts } from '@/lib/masterclass'
 
 type SessionDateHighlightProps = {
   className?: string
@@ -13,7 +12,7 @@ export function SessionDateHighlight({
 }: SessionDateHighlightProps) {
   return (
     <RotatingText
-      texts={DATE_TEXTS}
+      texts={getMasterclassDateTexts()}
       mainClassName={`date-highlight date-highlight--${size} ${className}`.trim()}
       staggerFrom="last"
       initial={{ y: '100%' }}

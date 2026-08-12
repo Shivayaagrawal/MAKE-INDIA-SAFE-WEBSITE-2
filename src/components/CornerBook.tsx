@@ -109,8 +109,23 @@ export const BOOK_PAGES: BookPage[] = [
   },
 ]
 
-export function CornerBook() {
-  const [open, setOpen] = useState(false)
+interface CornerBookProps {
+  /** Controlled open state — lets other UI (e.g. a founder teaser) open the book. */
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+}
+
+export function CornerBook({
+  open: openProp,
+  onOpenChange,
+}: CornerBookProps = {}) {
+  const [internalOpen, setInternalOpen] = useState(false)
+  const open = openProp ?? internalOpen
+
+  const setOpen = (next: boolean) => {
+    if (openProp === undefined) setInternalOpen(next)
+    onOpenChange?.(next)
+  }
 
   return (
     <aside

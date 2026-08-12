@@ -1,5 +1,24 @@
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
+import {
+  BookOpen,
+  Check,
+  Cloud,
+  Droplet,
+  Moon,
+  Scale,
+  Shield,
+  ShieldCheck,
+  Stethoscope,
+  Target,
+  Venus,
+  Waves,
+  Zap,
+} from 'lucide-react'
 import { CornerBook } from './CornerBook'
+import {
+  ProblemCardsScene,
+  type ProblemCardItem,
+} from './ui/problem-cards-scene'
 import {
   PerspectiveCarousel,
   type PerspectiveCarouselItem,
@@ -10,9 +29,11 @@ import GradientText from './ui/gradient-text'
 import { FlipText } from './ui/flip-text'
 import { FaqAccordion, type FaqItem } from './ui/faq-accordion'
 import { SessionDateHighlight } from './ui/session-date-highlight'
+import { AnimatedFooter } from './ui/animated-footer'
+import { CURRENT_MASTERCLASS } from '@/lib/masterclass'
 import './HomePage.css'
 
-const HEADING_GRADIENT = ['#000000', '#ffffff', '#000000'] as const
+const HEADING_GRADIENT = ['#171717', '#1c4d6e', '#171717'] as const
 
 function HeadingGradient({ children }: { children: ReactNode }) {
   return (
@@ -101,7 +122,154 @@ const FAQ_ITEMS: FaqItem[] = [
     answer:
       'Labels hide more than they show. We’ll teach a simple method to spot added sugars, portions, and marketing language that confuses shoppers.',
   },
+  {
+    question: 'Why does gut health keep coming up for so many different symptoms?',
+    answer:
+      'Digestion, appetite, energy, mood and hormones all run through the gut. It doesn’t explain every symptom, but it’s often a bigger lever than people expect—and one most advice skips entirely.',
+  },
+  {
+    question: 'Can stress really affect digestion?',
+    answer:
+      'Yes—stress can change gut motility and sensitivity, which is part of why anxious weeks often come with an unsettled stomach. We’ll explain the mechanism, not just the correlation.',
+  },
+  {
+    question: 'Why can’t I sleep even when I’m exhausted?',
+    answer:
+      'Tiredness and sleep quality aren’t the same thing. Late-night routines, blood sugar swings and stress hormones can all interfere with sleep that actually restores you.',
+  },
+  {
+    question: 'How can lifestyle changes affect PCOS symptoms?',
+    answer:
+      'Diet, movement, sleep and stress can influence insulin resistance, which plays a role in many PCOS symptoms. We’ll walk through what’s evidence-backed and what to discuss with a doctor.',
+  },
+  {
+    question: 'Why is losing weight—or keeping it off—so difficult?',
+    answer:
+      'Weight is downstream of sleep, stress, gut health and metabolism, not just calories in and out. We’ll unpack why one-variable advice keeps failing.',
+  },
+  {
+    question: 'When should I stop Googling and actually see a doctor?',
+    answer:
+      'When a symptom is severe, sudden, persistent beyond a few weeks, or you’re making decisions based on fear rather than evidence. We’ll be direct about where self-education ends and medical care begins.',
+  },
 ]
+
+/** Problem cards orbiting the hero in 3D — drawn from RECOGNITION_TAGS. */
+const HERO_PROBLEM_CARDS: ProblemCardItem[] = [
+  { label: 'Stress', icon: Cloud, position: [-3.1, 1.7, -0.4] },
+  { label: 'Poor sleep', icon: Moon, position: [-3.5, -0.4, 0.9] },
+  { label: 'Bloating & digestion', icon: Waves, position: [-2.4, -1.9, -1.1] },
+  { label: 'Low energy', icon: Zap, position: [-1.1, 2.7, 0.5] },
+  { label: 'PCOS', icon: Venus, position: [2.7, 1.9, -0.6] },
+  { label: 'Hair fall', icon: Droplet, position: [3.3, -0.4, 0.7] },
+  { label: 'Stubborn weight', icon: Scale, position: [2.1, -2.1, -0.3] },
+]
+
+/** Restates the connected__diagram spokes as a compact hero card — no new claims. */
+const GUT_CONNECTION_POINTS = [
+  'Digestion & bloating',
+  'Energy & metabolism',
+  'Stress & mood',
+  'Sleep & recovery',
+  'Hormonal health',
+] as const
+
+const TRUST_BADGES = [
+  {
+    icon: Stethoscope,
+    title: 'Doctor-led',
+    detail: 'by Dr. Yokesh Arul',
+  },
+  {
+    icon: BookOpen,
+    title: 'Evidence first',
+    detail: 'Not trends',
+  },
+  {
+    icon: Target,
+    title: 'Practical steps',
+    detail: 'You can apply',
+  },
+  {
+    icon: ShieldCheck,
+    title: 'Always responsible',
+    detail: 'Never miracle claims',
+  },
+] as const
+
+/** Everyday complaints, not diagnoses — validating, not diagnostic. */
+const RECOGNITION_TAGS = [
+  'Stress',
+  'Poor sleep',
+  'Constant tiredness',
+  'Bloating',
+  'Constipation',
+  'IBS-like discomfort',
+  'PCOS',
+  'Hair fall',
+  'Stubborn belly fat',
+  'Difficulty losing weight',
+  'Love handles',
+  'Low mood',
+  'Irregular eating',
+  'Late-night scrolling',
+  'Low energy',
+] as const
+
+const THEN_NOW_PAIRS = [
+  {
+    then: 'Home-cooked, regular meals',
+    now: 'Irregular, convenience eating',
+  },
+  {
+    then: 'Walking and active routines built into the day',
+    now: 'Long sedentary stretches at a desk or on a screen',
+  },
+  {
+    then: 'Lower screen exposure before sleep',
+    now: 'Late-night scrolling cutting into rest',
+  },
+  {
+    then: 'Predictable meals, fewer snacks',
+    now: 'Constant grazing, harder to track',
+  },
+  {
+    then: 'A simpler information environment',
+    now: 'Endless, contradictory health content',
+  },
+] as const
+
+const APPROACH_PILLARS = [
+  {
+    title: 'Gut & Digestion',
+    lead: true,
+    body: 'The lever we come back to most. Bowel habits, bloating, constipation, and the gut–brain relationship—understood well enough to act on.',
+  },
+  {
+    title: 'Food & Nutrition',
+    body: 'Meals, portions, protein, fibre and food quality—practical eating patterns, not restriction rules.',
+  },
+  {
+    title: 'Sleep',
+    body: 'Why sleep quality matters more than sleep duration, and how daily routines quietly undercut it.',
+  },
+  {
+    title: 'Stress & Mental Wellbeing',
+    body: 'How stress shows up physically, and what actually helps recovery—not just “relax more.”',
+  },
+  {
+    title: 'Movement',
+    body: 'Sustainable activity that fits a real week, not punishment-style exercise.',
+  },
+  {
+    title: 'Yoga',
+    body: 'Used where it earns its place: mobility, breathing and stress management.',
+  },
+  {
+    title: 'Integrity',
+    body: 'Clear about what the evidence supports, what remains uncertain, and when to see a doctor.',
+  },
+] as const
 
 function useReveal() {
   const rootRef = useRef<HTMLDivElement>(null)
@@ -167,6 +335,7 @@ function useReveal() {
 
 export function HomePage({ onReserve }: { onReserve?: () => void }) {
   const rootRef = useReveal()
+  const [bookOpen, setBookOpen] = useState(false)
 
   return (
     <div className="home" ref={rootRef}>
@@ -181,6 +350,12 @@ export function HomePage({ onReserve }: { onReserve?: () => void }) {
               Make India Safe
             </FlipText>
           </a>
+          <nav className="site-header__nav" aria-label="Primary">
+            <a href="#founder">About Dr. Yokesh</a>
+            <a href="#connected">The Gut Connection</a>
+            <a href="#stories">Stories</a>
+            <a href="#questions">Questions</a>
+          </nav>
           <LiquidMetalButton
             className="header-cta-metal"
             size="sm"
@@ -211,34 +386,139 @@ export function HomePage({ onReserve }: { onReserve?: () => void }) {
       <main id="main">
         {/* Hero */}
         <section className="hero" id="top" aria-labelledby="hero-heading">
-          <div className="hero__copy" data-reveal>
-            <h1 id="hero-heading">
-              <HeadingGradient>
-                You shouldn&apos;t need a medical degree to understand your own
-                health.
-              </HeadingGradient>
-            </h1>
+          <div className="hero__inner">
+            <div className="hero__copy" data-reveal>
+              <h1 id="hero-heading">
+                <HeadingGradient>
+                  The answers to your health may begin somewhere you rarely
+                  think about.
+                </HeadingGradient>
+                <span className="hero__emphasis">Your gut.</span>
+              </h1>
 
-            <p className="hero__lede">
-              Practical, evidence-based medical education for everyday
-              decisions—from food labels to when to see a doctor.
+              <p className="hero__lede">
+                From digestion and energy to mood, sleep and metabolism—
+                <strong>your gut plays a bigger role than you think.</strong>
+              </p>
+              <p className="hero__lede">
+                <strong>Make India Safe</strong> helps you understand those
+                connections without confusion, fear, or miracle claims.
+              </p>
+
+              <div className="hero__actions">
+                <LiquidMetalButton
+                  size="lg"
+                  borderWidth={3}
+                  metalConfig={{
+                    colorBack: '#6b6b6f',
+                    colorTint: '#ffffff',
+                    speed: 0.45,
+                    repetition: 4,
+                    distortion: 0.12,
+                  }}
+                  onClick={() => {
+                    if (onReserve) {
+                      onReserve()
+                      return
+                    }
+                    document.getElementById('reserve')?.scrollIntoView({
+                      behavior: 'smooth',
+                      block: 'start',
+                    })
+                  }}
+                >
+                  Reserve a Spot
+                </LiquidMetalButton>
+                <p className="hero__actions-meta">
+                  <Shield size={13} strokeWidth={1.75} aria-hidden="true" />
+                  Free to attend · one session · no medical jargon
+                </p>
+              </div>
+            </div>
+
+            <div className="hero__visual" data-reveal>
+              <div className="hero__visual-stage">
+                <svg
+                  className="hero__bg-motif"
+                  viewBox="0 0 300 480"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="10"
+                  strokeLinecap="round"
+                  aria-hidden="true"
+                >
+                  <path d="M150 20c-70 0-95 55-45 80 55 27 115-10 118 42 3 55-110 35-118 95-7 52 100 55 95 105-4 40-50 65-50 108" />
+                </svg>
+
+                <div className="hero__problem-cards" aria-hidden="true">
+                  <ProblemCardsScene items={HERO_PROBLEM_CARDS} />
+                </div>
+
+                <div className="hero__gut-card">
+                  <p className="hero__gut-card-eyebrow">The Gut Connection</p>
+                  <h2>
+                    One system.
+                    <br />
+                    Many signals.
+                  </h2>
+                  <ul className="hero__gut-card-list">
+                    {GUT_CONNECTION_POINTS.map((point) => (
+                      <li key={point}>
+                        <Check size={14} strokeWidth={2} aria-hidden="true" />
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="hero__gut-card-tagline">
+                    Understand the connection.
+                    <br />
+                    Change the conversation.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="hero__badges" data-reveal>
+            {TRUST_BADGES.map(({ icon: Icon, title, detail }) => (
+              <div className="hero__badge" key={title}>
+                <Icon size={20} strokeWidth={1.75} aria-hidden="true" />
+                <div>
+                  <strong>{title}</strong>
+                  <span>{detail}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Recognition */}
+        <section
+          className="section recognition"
+          aria-labelledby="recognition-heading"
+        >
+          <div className="section__narrow" data-reveal>
+            <h2 id="recognition-heading">
+              <HeadingGradient>Does any of this sound familiar?</HeadingGradient>
+            </h2>
+            <p>
+              Sometimes the problem isn&apos;t one dramatic symptom. It&apos;s a
+              collection of small things that slowly become your new normal.
             </p>
           </div>
 
-          <div className="hero__carousel" data-reveal>
-            <PerspectiveCarousel
-              items={QUESTION_CAROUSEL}
-              defaultActiveIndex={0}
-              loop
-              showControls={false}
-              slideWidth={200}
-              rotationStep={52}
-              inactiveScale={0.82}
-              className="hero-carousel"
-              labelClassName="hero-carousel__label"
-              imageClassName="hero-carousel__image"
-            />
-          </div>
+          <ul className="recognition__field" aria-label="Common everyday concerns">
+            {RECOGNITION_TAGS.map((tag, index) => (
+              <li
+                key={tag}
+                className="recognition__tag"
+                data-reveal
+                style={{ transitionDelay: `${(index % 6) * 45}ms` }}
+              >
+                {tag}
+              </li>
+            ))}
+          </ul>
         </section>
 
         {/* Confusion */}
@@ -288,6 +568,73 @@ export function HomePage({ onReserve }: { onReserve?: () => void }) {
           </div>
         </section>
 
+        {/* The world changed */}
+        <section
+          className="section world-changed"
+          aria-labelledby="world-changed-heading"
+        >
+          <div className="section__narrow" data-reveal>
+            <h2 id="world-changed-heading">
+              <HeadingGradient>
+                Our bodies didn&apos;t suddenly change.
+                <span className="line-break">Our environment did.</span>
+              </HeadingGradient>
+            </h2>
+            <p>
+              More packaged food. More sedentary time. More late-night
+              screens. More stress. More conflicting advice.
+            </p>
+            <p>
+              None of this explains every health problem. But together, it
+              shapes the environment our bodies adapt to every day.
+            </p>
+          </div>
+
+          <div className="world-changed__table" data-reveal>
+            <div className="world-changed__row world-changed__row--head">
+              <span>Then</span>
+              <span>Now</span>
+            </div>
+            {THEN_NOW_PAIRS.map((pair) => (
+              <div className="world-changed__row" key={pair.then}>
+                <span>{pair.then}</span>
+                <span>{pair.now}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Your health is connected */}
+        <section
+          className="section connected"
+          id="connected"
+          aria-labelledby="connected-heading"
+        >
+          <div className="section__narrow" data-reveal>
+            <h2 id="connected-heading">
+              <HeadingGradient>
+                Your symptoms may feel disconnected.
+                <span className="line-break">Your health isn&apos;t.</span>
+              </HeadingGradient>
+            </h2>
+            <p>
+              Digestion, stress, sleep, movement and food habits can all
+              influence each other—and gut health is often the biggest lever
+              in that system. Not the only cause of everything. The one most
+              people never get explained to them.
+            </p>
+          </div>
+
+          <div className="connected__diagram" data-reveal aria-hidden="true">
+            <span className="connected__hub">Gut</span>
+            <span className="connected__spoke">Digestion</span>
+            <span className="connected__spoke">Energy</span>
+            <span className="connected__spoke">Mood</span>
+            <span className="connected__spoke">Sleep</span>
+            <span className="connected__spoke">Weight</span>
+          </div>
+        </section>
+
         {/* What we're trying to fix */}
         <section
           className="section fix"
@@ -302,7 +649,7 @@ export function HomePage({ onReserve }: { onReserve?: () => void }) {
               <p className="lede">They need better health content.</p>
               <p>That means information that</p>
               <ul className="principle-list">
-                <li>is medically accurate,</li>
+                <li>is medically responsible,</li>
                 <li>explains the reasoning,</li>
                 <li>acknowledges uncertainty,</li>
                 <li>and can actually be applied in daily life.</li>
@@ -326,6 +673,39 @@ export function HomePage({ onReserve }: { onReserve?: () => void }) {
           </div>
         </section>
 
+        {/* Founder */}
+        <section
+          className="section founder"
+          id="founder"
+          aria-labelledby="founder-heading"
+        >
+          <div className="founder__card" data-reveal>
+            <img
+              src="/images/book/page-5-portrait.png"
+              alt="Dr. Yokesh Arul"
+              className="founder__portrait"
+            />
+            <div className="founder__copy">
+              <h2 id="founder-heading">
+                <HeadingGradient>The doctor behind Make India Safe</HeadingGradient>
+              </h2>
+              <p>
+                Dr. Yokesh Arul, MBBS, started Make India Safe after years of
+                watching preventable illness arrive as a surprise. His
+                story—hospital wards, campus conversations, and the moment
+                this became a mission—is a short, real one.
+              </p>
+              <button
+                type="button"
+                className="founder__cta"
+                onClick={() => setBookOpen(true)}
+              >
+                Read his story <span aria-hidden="true">→</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
         {/* Masterclass */}
         <section
           className="section masterclass"
@@ -333,16 +713,22 @@ export function HomePage({ onReserve }: { onReserve?: () => void }) {
           aria-labelledby="masterclass-heading"
         >
           <div className="section__narrow">
+            <p className="masterclass__badge">
+              <SessionDateHighlight size="md" />
+              <span className="masterclass__badge-topic">
+                {CURRENT_MASTERCLASS.topic}
+              </span>
+            </p>
             <h2 id="masterclass-heading">
               <HeadingGradient>
-                We begin with Diet &amp; Diabetes.
+                We begin with {CURRENT_MASTERCLASS.topic}.
               </HeadingGradient>
             </h2>
             <p>
               India has one of the world&apos;s largest populations living with
               diabetes.
             </p>
-            <p>
+            <p className="lede">
               Understanding nutrition shouldn&apos;t begin after diagnosis.
               <br />
               It should begin much earlier.
@@ -352,6 +738,35 @@ export function HomePage({ onReserve }: { onReserve?: () => void }) {
               and metabolic health using current medical evidence—not internet
               trends.
             </p>
+          </div>
+        </section>
+
+        {/* Everyday questions carousel */}
+        <section
+          className="section questions-carousel"
+          aria-labelledby="questions-carousel-heading"
+        >
+          <div className="section__narrow" data-reveal>
+            <h2 id="questions-carousel-heading">
+              <HeadingGradient>
+                The questions we hear every week.
+              </HeadingGradient>
+            </h2>
+          </div>
+
+          <div className="questions-carousel__stage" data-reveal>
+            <PerspectiveCarousel
+              items={QUESTION_CAROUSEL}
+              defaultActiveIndex={0}
+              loop
+              showControls={false}
+              slideWidth={200}
+              rotationStep={52}
+              inactiveScale={0.82}
+              className="hero-carousel"
+              labelClassName="hero-carousel__label"
+              imageClassName="hero-carousel__image"
+            />
           </div>
         </section>
 
@@ -365,11 +780,67 @@ export function HomePage({ onReserve }: { onReserve?: () => void }) {
             <h2 id="questions-heading">
               <HeadingGradient>Questions we&apos;ll answer.</HeadingGradient>
             </h2>
+            <p className="questions__intro">
+              The first {FAQ_ITEMS.length - 6} cover {CURRENT_MASTERCLASS.topic}
+              , our current masterclass. The rest are the bigger picture
+              we&apos;re building toward.
+            </p>
             <FaqAccordion
               title=""
               items={FAQ_ITEMS}
               className="questions-faq"
             />
+          </div>
+        </section>
+
+        {/* Our approach */}
+        <section className="section approach" aria-labelledby="approach-heading">
+          <div className="section__narrow" data-reveal>
+            <h2 id="approach-heading">
+              <HeadingGradient>
+                No miracle hacks.
+                <span className="line-break">No one-variable explanations.</span>
+              </HeadingGradient>
+            </h2>
+            <p>
+              We look at the things that shape health every day—and explain
+              how to improve them without turning your life upside down.
+            </p>
+          </div>
+
+          <ul className="approach__pillars">
+            {APPROACH_PILLARS.map((pillar) => (
+              <li
+                key={pillar.title}
+                className={
+                  'lead' in pillar && pillar.lead
+                    ? 'approach__pillar approach__pillar--lead'
+                    : 'approach__pillar'
+                }
+                data-reveal
+              >
+                <h3>{pillar.title}</h3>
+                <p>{pillar.body}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* Participant stories */}
+        <section
+          className="section stories"
+          id="stories"
+          aria-labelledby="stories-heading"
+        >
+          <div className="section__narrow" data-reveal>
+            <h2 id="stories-heading">
+              <HeadingGradient>What people take away.</HeadingGradient>
+            </h2>
+            <p className="stories__status" role="status">
+              We&apos;re collecting real feedback from live masterclass
+              participants. Verified stories will appear here as sessions
+              run—we don&apos;t publish quotes we haven&apos;t earned.
+            </p>
           </div>
         </section>
 
@@ -384,13 +855,38 @@ export function HomePage({ onReserve }: { onReserve?: () => void }) {
               <span className="closing__meta-sep" aria-hidden="true">
                 ·
               </span>
-              <span className="closing__meta-topic">Diet &amp; Diabetes</span>
+              <span className="closing__meta-topic">
+                {CURRENT_MASTERCLASS.topic}
+              </span>
             </p>
           </div>
         </section>
       </main>
 
-      <CornerBook />
+      <footer className="site-footer">
+        <div className="site-footer__inner">
+          <p className="site-footer__disclaimer">
+            Make India Safe provides health education and does not replace
+            individual medical diagnosis, treatment, or professional medical
+            care. Always consult a qualified doctor about your specific
+            symptoms and health history.
+          </p>
+          <nav className="site-footer__links" aria-label="Footer">
+            <a href="#top">About</a>
+            <a href="mailto:hello@makeindiasafe.com">Contact</a>
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
+          </nav>
+        </div>
+        <div className="home__animated-footer">
+          <AnimatedFooter
+            headingLines={['Make India Safe']}
+            revealOnScroll
+          />
+        </div>
+      </footer>
+
+      <CornerBook open={bookOpen} onOpenChange={setBookOpen} />
     </div>
   )
 }

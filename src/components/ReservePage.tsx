@@ -6,14 +6,15 @@ import {
 import { LiquidMetalButton } from './ui/liquid-metal'
 import { CreepyButton } from './ui/creepy-button'
 import { SessionDateHighlight } from './ui/session-date-highlight'
+import { CURRENT_MASTERCLASS, MASTERCLASS_DATE_CONFIRMED } from '@/lib/masterclass'
 import './ReservePage.css'
 
 const INTEREST_OPTIONS = [
-  'Diet & Diabetes',
-  'Insulin resistance',
-  'Nutrition & food labels',
-  'Prevention for younger adults',
-  'Lifestyle changes',
+  CURRENT_MASTERCLASS.topic,
+  'Gut health & digestion',
+  'Stress & sleep',
+  'PCOS & hormones',
+  'Weight & metabolism',
   'Something else',
 ] as const
 
@@ -61,9 +62,13 @@ type FormState = {
   email: string
   phone: string
   age: string
+  city: string
   interest: string
   speakAbout: string
+  consent: boolean
 }
+
+type FormErrors = Partial<Record<keyof FormState, string>>
 
 const INITIAL: FormState = {
   firstName: '',
@@ -71,8 +76,45 @@ const INITIAL: FormState = {
   email: '',
   phone: '',
   age: '',
+  city: '',
   interest: '',
   speakAbout: '',
+  consent: false,
+}
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+function validate(form: FormState): FormErrors {
+  const errors: FormErrors = {}
+
+  if (!form.firstName.trim()) {
+    errors.firstName = 'Enter your first name.'
+  }
+
+  if (!form.email.trim()) {
+    errors.email = 'Enter an email so we can reach you.'
+  } else if (!EMAIL_PATTERN.test(form.email.trim())) {
+    errors.email = 'That email doesn’t look right — check for typos.'
+  }
+
+  if (!form.age.trim()) {
+    errors.age = 'Enter your age.'
+  } else {
+    const age = Number(form.age)
+    if (!Number.isFinite(age) || age < 1 || age > 120) {
+      errors.age = 'Enter an age between 1 and 120.'
+    }
+  }
+
+  if (!form.interest) {
+    errors.interest = 'Choose what you’re interested in.'
+  }
+
+  if (!form.consent) {
+    errors.consent = 'Check the box to confirm you agree to be contacted.'
+  }
+
+  return errors
 }
 
 interface ReservePageProps {
@@ -81,6 +123,7 @@ interface ReservePageProps {
 
 export function ReservePage({ onBack }: ReservePageProps) {
   const [form, setForm] = useState<FormState>(INITIAL)
+  const [errors, setErrors] = useState<FormErrors>({})
   const [submitted, setSubmitted] = useState(false)
   const [ageOpinion, setAgeOpinion] = useState<string | null>(null)
 
@@ -93,8 +136,14 @@ export function ReservePage({ onBack }: ReservePageProps) {
     ) => {
       const value = event.target.value
       setForm((prev) => ({ ...prev, [field]: value }))
+      setErrors((prev) => ({ ...prev, [field]: undefined }))
       if (field === 'age') setAgeOpinion(null)
     }
+
+  const handleConsentChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({ ...prev, consent: event.target.checked }))
+    setErrors((prev) => ({ ...prev, consent: undefined }))
+  }
 
   const handlePeek = () => {
     setAgeOpinion(getAgePeekMessage(form.age))
@@ -102,6 +151,11 @@ export function ReservePage({ onBack }: ReservePageProps) {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
+    const nextErrors = validate(form)
+    setErrors(nextErrors)
+    if (Object.keys(nextErrors).length > 0) {
+      return
+    }
     setSubmitted(true)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -111,7 +165,7 @@ export function ReservePage({ onBack }: ReservePageProps) {
       <header className="reserve__header">
         <div className="reserve__header-inner">
           <button type="button" className="reserve__back" onClick={onBack}>
-            ← Back
+            ← Back to home
           </button>
           <p className="reserve__brand">Make India Safe</p>
         </div>
@@ -123,9 +177,20 @@ export function ReservePage({ onBack }: ReservePageProps) {
             <h1>You&apos;re on the list.</h1>
             <p>
               Thanks, {form.firstName}. We&apos;ll reach out at{' '}
-              <strong>{form.email}</strong> with details for Diet &amp;
-              Diabetes on{' '}
-              <SessionDateHighlight size="md" className="reserve__date-inline" />
+              <strong>{form.email}</strong> with details for{' '}
+              {CURRENT_MASTERCLASS.topic}
+              {MASTERCLASS_DATE_CONFIRMED ? (
+                <>
+                  {' '}
+                  on{' '}
+                  <SessionDateHighlight
+                    size="md"
+                    className="reserve__date-inline"
+                  />
+                </>
+              ) : (
+                ' the moment the next session date is confirmed'
+              )}
               .
             </p>
             <LiquidMetalButton
@@ -148,7 +213,9 @@ export function ReservePage({ onBack }: ReservePageProps) {
             <div className="reserve__intro">
               <div className="reserve__date-row">
                 <SessionDateHighlight size="lg" className="reserve__date" />
-                <span className="reserve__date-topic">Diet &amp; Diabetes</span>
+                <span className="reserve__date-topic">
+                  {CURRENT_MASTERCLASS.topic}
+                </span>
               </div>
               <h1>Reserve a spot.</h1>
               <p>
@@ -166,17 +233,25 @@ export function ReservePage({ onBack }: ReservePageProps) {
                     type="text"
                     autoComplete="given-name"
                     required
+                    aria-invalid={Boolean(errors.firstName)}
+                    aria-describedby={
+                      errors.firstName ? 'error-firstName' : undefined
+                    }
                     value={form.firstName}
                     onChange={update('firstName')}
                   />
+                  {errors.firstName ? (
+                    <p className="reserve__error" id="error-firstName" role="alert">
+                      {errors.firstName}
+                    </p>
+                  ) : null}
                 </label>
                 <label className="reserve__field">
-                  <span>Last name</span>
+                  <span>Last name (optional)</span>
                   <input
                     name="lastName"
                     type="text"
                     autoComplete="family-name"
-                    required
                     value={form.lastName}
                     onChange={update('lastName')}
                   />
@@ -190,20 +265,26 @@ export function ReservePage({ onBack }: ReservePageProps) {
                   type="email"
                   autoComplete="email"
                   required
+                  aria-invalid={Boolean(errors.email)}
+                  aria-describedby={errors.email ? 'error-email' : undefined}
                   value={form.email}
                   onChange={update('email')}
                 />
+                {errors.email ? (
+                  <p className="reserve__error" id="error-email" role="alert">
+                    {errors.email}
+                  </p>
+                ) : null}
               </label>
 
               <div className="reserve__row">
                 <label className="reserve__field">
-                  <span>Phone number</span>
+                  <span>Phone number (optional)</span>
                   <input
                     name="phone"
                     type="tel"
                     autoComplete="tel"
                     inputMode="tel"
-                    required
                     value={form.phone}
                     onChange={update('phone')}
                   />
@@ -222,9 +303,16 @@ export function ReservePage({ onBack }: ReservePageProps) {
                       min={1}
                       max={120}
                       required
+                      aria-invalid={Boolean(errors.age)}
+                      aria-describedby={errors.age ? 'error-age' : undefined}
                       value={form.age}
                       onChange={update('age')}
                     />
+                    {errors.age ? (
+                      <p className="reserve__error" id="error-age" role="alert">
+                        {errors.age}
+                      </p>
+                    ) : null}
                   </label>
                   <CreepyButton
                     className="reserve__peek"
@@ -243,10 +331,25 @@ export function ReservePage({ onBack }: ReservePageProps) {
               </div>
 
               <label className="reserve__field">
+                <span>City (optional)</span>
+                <input
+                  name="city"
+                  type="text"
+                  autoComplete="address-level2"
+                  value={form.city}
+                  onChange={update('city')}
+                />
+              </label>
+
+              <label className="reserve__field">
                 <span>What are you interested in?</span>
                 <select
                   name="interest"
                   required
+                  aria-invalid={Boolean(errors.interest)}
+                  aria-describedby={
+                    errors.interest ? 'error-interest' : undefined
+                  }
                   value={form.interest}
                   onChange={update('interest')}
                 >
@@ -259,19 +362,53 @@ export function ReservePage({ onBack }: ReservePageProps) {
                     </option>
                   ))}
                 </select>
+                {errors.interest ? (
+                  <p className="reserve__error" id="error-interest" role="alert">
+                    {errors.interest}
+                  </p>
+                ) : null}
               </label>
 
               <label className="reserve__field">
-                <span>What do you want us to speak about?</span>
+                <span>What do you want us to speak about? (optional)</span>
                 <textarea
                   name="speakAbout"
                   rows={4}
-                  required
                   placeholder="Questions, myths, or situations you want covered…"
                   value={form.speakAbout}
                   onChange={update('speakAbout')}
                 />
               </label>
+
+              <label className="reserve__consent">
+                <input
+                  name="consent"
+                  type="checkbox"
+                  required
+                  aria-invalid={Boolean(errors.consent)}
+                  aria-describedby={
+                    errors.consent ? 'error-consent' : undefined
+                  }
+                  checked={form.consent}
+                  onChange={handleConsentChange}
+                />
+                <span>
+                  I agree to be contacted about this session and understand
+                  Make India Safe provides health education, not medical
+                  diagnosis or treatment.
+                </span>
+              </label>
+              {errors.consent ? (
+                <p className="reserve__error" id="error-consent" role="alert">
+                  {errors.consent}
+                </p>
+              ) : null}
+
+              <p className="reserve__reassurance">
+                Free to attend, no payment involved. We&apos;ll only contact
+                you about this session — no spam, and your details aren&apos;t
+                shared.
+              </p>
 
               <div className="reserve__actions">
                 <LiquidMetalButton
