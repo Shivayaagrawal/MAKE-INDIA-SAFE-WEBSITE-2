@@ -7,6 +7,14 @@ import { LiquidMetalButton } from './ui/liquid-metal'
 import { CreepyButton } from './ui/creepy-button'
 import { SessionDateHighlight } from './ui/session-date-highlight'
 import { CURRENT_MASTERCLASS, MASTERCLASS_DATE_CONFIRMED } from '@/lib/masterclass'
+import {
+  countWords,
+  isValidEmail,
+  isValidIndianPhone,
+  MAX_SPEAK_WORDS,
+  normalizeIndianPhone,
+} from '@/lib/reservation'
+import { isSupabaseConfigured, supabase } from '@/lib/supabase'
 import './ReservePage.css'
 
 const INTEREST_OPTIONS = [
@@ -28,32 +36,38 @@ function getAgePeekMessage(ageValue: string): string {
     return 'That doesn’t look like an age. Try a real number — we’re curious, not psychic.'
   }
 
-  if (age < 13) {
-    return 'Ooo, too young. Come back when WhatsApp health forwards aren’t your curriculum.'
+  if (age <= 10) {
+    return 'Tiny human, big energy!'
   }
-  if (age < 18) {
-    return 'Almost there. Prevention starts early — bring a grown-up who’ll listen with you.'
+  if (age <= 20) {
+    return 'Growing up, glowing up, and still figuring it out!'
   }
-  if (age < 25) {
-    return 'Young adult spotted. Your habits are writing drafts of your future — make them readable.'
+  if (age <= 30) {
+    return 'Young, wild, and hopefully remembering to drink water!'
   }
-  if (age < 35) {
-    return 'Peak confusion years. Perfect time to swap myths for medicine that actually makes sense.'
+  if (age <= 40) {
+    return 'Adulting is hard, but staying healthy makes it slightly less dramatic!'
   }
-  if (age < 45) {
-    return 'Ah, the “I’ll sort it later” club. Spoiler: later just filed a meeting invite.'
+  if (age <= 50) {
+    return 'Life is getting serious, but your health does not have to!'
   }
-  if (age < 55) {
-    return 'Old is gold — but gold still needs a label. Clarity beats guesswork from here on.'
+  if (age <= 60) {
+    return 'Still young at heart, just with a few more stories to tell!'
   }
-  if (age < 65) {
-    return 'You’ve seen enough trends come and go. Ready for evidence that doesn’t shout?'
+  if (age <= 70) {
+    return 'Age is just a number, but good health is the real flex!'
   }
-  if (age <= 120) {
-    return 'Wisdom years. The jokes get better — and so should the health advice.'
+  if (age <= 80) {
+    return 'Still going strong, still stealing the spotlight!'
+  }
+  if (age <= 90) {
+    return 'Eight decades in and still keeping life interesting!'
+  }
+  if (age < 100) {
+    return 'Ninety and fabulous, with wisdom to spare!'
   }
 
-  return 'That age broke our peek. Try something between 1 and 120 — we’re only human.'
+  return 'Triple digits and still showing us how it’s done!'
 }
 
 type FormState = {
@@ -82,8 +96,6 @@ const INITIAL: FormState = {
   consent: false,
 }
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
 function validate(form: FormState): FormErrors {
   const errors: FormErrors = {}
 
@@ -93,8 +105,18 @@ function validate(form: FormState): FormErrors {
 
   if (!form.email.trim()) {
     errors.email = 'Enter an email so we can reach you.'
-  } else if (!EMAIL_PATTERN.test(form.email.trim())) {
-    errors.email = 'That email doesn’t look right — check for typos.'
+  } else if (!isValidEmail(form.email)) {
+    errors.email = 'Enter a valid email address.'
+  }
+
+  if (!form.phone.trim()) {
+    errors.phone = 'Enter your phone number.'
+  } else if (!isValidIndianPhone(form.phone)) {
+    errors.phone = 'Enter a valid 10-digit Indian mobile number.'
+  }
+
+  if (!form.city.trim()) {
+    errors.city = 'Enter your city.'
   }
 
   if (!form.age.trim()) {
@@ -108,6 +130,11 @@ function validate(form: FormState): FormErrors {
 
   if (!form.interest) {
     errors.interest = 'Choose what you’re interested in.'
+  }
+
+  const speakWords = countWords(form.speakAbout)
+  if (speakWords > MAX_SPEAK_WORDS) {
+    errors.speakAbout = `Keep this to ${MAX_SPEAK_WORDS} words or fewer (${speakWords} now).`
   }
 
   if (!form.consent) {
@@ -125,7 +152,10 @@ export function ReservePage({ onBack }: ReservePageProps) {
   const [form, setForm] = useState<FormState>(INITIAL)
   const [errors, setErrors] = useState<FormErrors>({})
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const [ageOpinion, setAgeOpinion] = useState<string | null>(null)
+  const speakWordCount = countWords(form.speakAbout)
 
   const update =
     (field: keyof FormState) =>
@@ -149,13 +179,51 @@ export function ReservePage({ onBack }: ReservePageProps) {
     setAgeOpinion(getAgePeekMessage(form.age))
   }
 
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault()
     const nextErrors = validate(form)
     setErrors(nextErrors)
+    setSubmitError(null)
     if (Object.keys(nextErrors).length > 0) {
       return
     }
+
+    const phone = normalizeIndianPhone(form.phone)
+    if (!phone) {
+      setErrors((prev) => ({
+        ...prev,
+        phone: 'Enter a valid 10-digit Indian mobile number.',
+      }))
+      return
+    }
+
+    if (!isSupabaseConfigured || !supabase) {
+      setSubmitError(
+        'Reservations are not connected yet. Add your Supabase URL and anon key to .env.',
+      )
+      return
+    }
+
+    setSubmitting(true)
+    const { error } = await supabase.from('reservations').insert({
+      first_name: form.firstName.trim(),
+      last_name: form.lastName.trim() || null,
+      email: form.email.trim().toLowerCase(),
+      phone,
+      age: Number(form.age),
+      city: form.city.trim(),
+      interest: form.interest,
+      speak_about: form.speakAbout.trim() || null,
+      consent: form.consent,
+      masterclass_topic: CURRENT_MASTERCLASS.topic,
+    })
+    setSubmitting(false)
+
+    if (error) {
+      setSubmitError('Something went wrong saving your reservation. Please try again.')
+      return
+    }
+
     setSubmitted(true)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -279,15 +347,24 @@ export function ReservePage({ onBack }: ReservePageProps) {
 
               <div className="reserve__row">
                 <label className="reserve__field">
-                  <span>Phone number (optional)</span>
+                  <span>Phone number</span>
                   <input
                     name="phone"
                     type="tel"
                     autoComplete="tel"
                     inputMode="tel"
+                    required
+                    placeholder="10-digit Indian mobile"
+                    aria-invalid={Boolean(errors.phone)}
+                    aria-describedby={errors.phone ? 'error-phone' : undefined}
                     value={form.phone}
                     onChange={update('phone')}
                   />
+                  {errors.phone ? (
+                    <p className="reserve__error" id="error-phone" role="alert">
+                      {errors.phone}
+                    </p>
+                  ) : null}
                 </label>
                 <div className="reserve__age-block">
                   <label className="reserve__field">
@@ -331,14 +408,22 @@ export function ReservePage({ onBack }: ReservePageProps) {
               </div>
 
               <label className="reserve__field">
-                <span>City (optional)</span>
+                <span>City</span>
                 <input
                   name="city"
                   type="text"
                   autoComplete="address-level2"
+                  required
+                  aria-invalid={Boolean(errors.city)}
+                  aria-describedby={errors.city ? 'error-city' : undefined}
                   value={form.city}
                   onChange={update('city')}
                 />
+                {errors.city ? (
+                  <p className="reserve__error" id="error-city" role="alert">
+                    {errors.city}
+                  </p>
+                ) : null}
               </label>
 
               <label className="reserve__field">
@@ -375,9 +460,26 @@ export function ReservePage({ onBack }: ReservePageProps) {
                   name="speakAbout"
                   rows={4}
                   placeholder="Questions, myths, or situations you want covered…"
+                  aria-invalid={Boolean(errors.speakAbout)}
+                  aria-describedby="speak-about-meta"
                   value={form.speakAbout}
                   onChange={update('speakAbout')}
                 />
+                <p
+                  id="speak-about-meta"
+                  className={
+                    speakWordCount > MAX_SPEAK_WORDS
+                      ? 'reserve__word-count reserve__word-count--over'
+                      : 'reserve__word-count'
+                  }
+                >
+                  {speakWordCount}/{MAX_SPEAK_WORDS} words
+                </p>
+                {errors.speakAbout ? (
+                  <p className="reserve__error" id="error-speakAbout" role="alert">
+                    {errors.speakAbout}
+                  </p>
+                ) : null}
               </label>
 
               <label className="reserve__consent">
@@ -410,10 +512,17 @@ export function ReservePage({ onBack }: ReservePageProps) {
                 shared.
               </p>
 
+              {submitError ? (
+                <p className="reserve__error" role="alert">
+                  {submitError}
+                </p>
+              ) : null}
+
               <div className="reserve__actions">
                 <LiquidMetalButton
                   type="submit"
                   size="md"
+                  disabled={submitting}
                   borderWidth={3}
                   metalConfig={{
                     colorBack: '#6b6b6f',
@@ -423,7 +532,7 @@ export function ReservePage({ onBack }: ReservePageProps) {
                     distortion: 0.12,
                   }}
                 >
-                  Submit reservation
+                  {submitting ? 'Submitting…' : 'Submit reservation'}
                 </LiquidMetalButton>
               </div>
             </form>

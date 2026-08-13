@@ -1,39 +1,84 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import {
   BookOpen,
-  Check,
-  Cloud,
-  Droplet,
-  Moon,
-  Scale,
   Shield,
   ShieldCheck,
   Stethoscope,
   Target,
-  Venus,
-  Waves,
-  Zap,
 } from 'lucide-react'
 import { CornerBook } from './CornerBook'
-import {
-  ProblemCardsScene,
-  type ProblemCardItem,
-} from './ui/problem-cards-scene'
-import {
-  PerspectiveCarousel,
-  type PerspectiveCarouselItem,
-} from './ui/perspective-carousel'
+import { BooksShowcase } from './ui/books-showcase'
+import { CylinderCarousel } from './ui/cylinder-carousel'
 import { ScrollDissolveReveal } from './ui/scroll-dissolve-reveal'
 import { LiquidMetalButton } from './ui/liquid-metal'
 import GradientText from './ui/gradient-text'
 import { FlipText } from './ui/flip-text'
 import { FaqAccordion, type FaqItem } from './ui/faq-accordion'
 import { SessionDateHighlight } from './ui/session-date-highlight'
-import { AnimatedFooter } from './ui/animated-footer'
 import { CURRENT_MASTERCLASS } from '@/lib/masterclass'
+import { PROBLEM_BOOKS } from '@/lib/problem-books'
 import './HomePage.css'
 
 const HEADING_GRADIENT = ['#171717', '#1c4d6e', '#171717'] as const
+
+const HERO_CAROUSEL_IMAGES = [
+  {
+    src: '/images/questions/q-rice.jpg',
+    alt: 'Bowl of cooked rice',
+  },
+  {
+    src: '/images/carousel/yogurt-gut.jpg',
+    alt: 'Yogurt, a gut-friendly food',
+  },
+  {
+    src: '/images/carousel/sleep.jpg',
+    alt: 'Person sleeping',
+  },
+  {
+    src: '/images/questions/q-insulin.jpg',
+    alt: 'Blood glucose meter and insulin syringes',
+  },
+  {
+    src: '/images/carousel/indian-meal.jpg',
+    alt: 'Home-cooked Indian meal',
+  },
+  {
+    src: '/images/questions/q-fruit.jpg',
+    alt: 'Fresh fruit platter',
+  },
+  {
+    src: '/images/carousel/yoga.jpg',
+    alt: 'Yoga for stress and recovery',
+  },
+  {
+    src: '/images/questions/q-lifestyle.jpg',
+    alt: 'Person exercising as part of a healthy lifestyle',
+  },
+  {
+    src: '/images/carousel/vegetables.jpg',
+    alt: 'Fresh vegetables',
+  },
+  {
+    src: '/images/carousel/desk-stress.jpg',
+    alt: 'Long hours at a desk',
+  },
+  {
+    src: '/images/questions/q-food-label.jpg',
+    alt: 'Nutrition facts food label',
+  },
+  {
+    src: '/images/carousel/walking.jpg',
+    alt: 'Walking as everyday movement',
+  },
+  {
+    src: '/images/questions/q-jaggery.jpg',
+    alt: 'Traditional Indian jaggery',
+  },
+  {
+    src: '/images/questions/q-young-adults.jpg',
+    alt: 'Young adults',
+  },
+] as const
 
 function HeadingGradient({ children }: { children: ReactNode }) {
   return (
@@ -46,45 +91,6 @@ function HeadingGradient({ children }: { children: ReactNode }) {
     </GradientText>
   )
 }
-
-/** Everyday questions — images matched to each topic. */
-const QUESTION_CAROUSEL: PerspectiveCarouselItem[] = [
-  {
-    src: '/images/questions/q-rice.jpg',
-    title: 'Does rice really raise diabetes risk?',
-    alt: 'Bowl of cooked white rice',
-  },
-  {
-    src: '/images/questions/q-fruit.jpg',
-    title: 'Should fruit be avoided?',
-    alt: 'Fresh fruit platter with mango, berries, and apple',
-  },
-  {
-    src: '/images/questions/q-insulin.jpg',
-    title: 'What is insulin resistance?',
-    alt: 'Blood glucose meter and insulin syringes',
-  },
-  {
-    src: '/images/questions/q-jaggery.jpg',
-    title: 'Is jaggery healthier than sugar?',
-    alt: 'Cubes of traditional Indian jaggery',
-  },
-  {
-    src: '/images/questions/q-young-adults.jpg',
-    title: 'Why are younger adults getting diabetes?',
-    alt: 'Group of young adults',
-  },
-  {
-    src: '/images/questions/q-lifestyle.jpg',
-    title: 'Can lifestyle change reduce long-term risk?',
-    alt: 'Person exercising as part of a healthy lifestyle',
-  },
-  {
-    src: '/images/questions/q-food-label.jpg',
-    title: 'How should food labels actually be read?',
-    alt: 'Nutrition Facts food label',
-  },
-]
 
 const FAQ_ITEMS: FaqItem[] = [
   {
@@ -154,26 +160,6 @@ const FAQ_ITEMS: FaqItem[] = [
   },
 ]
 
-/** Problem cards orbiting the hero in 3D — drawn from RECOGNITION_TAGS. */
-const HERO_PROBLEM_CARDS: ProblemCardItem[] = [
-  { label: 'Stress', icon: Cloud, position: [-3.1, 1.7, -0.4] },
-  { label: 'Poor sleep', icon: Moon, position: [-3.5, -0.4, 0.9] },
-  { label: 'Bloating & digestion', icon: Waves, position: [-2.4, -1.9, -1.1] },
-  { label: 'Low energy', icon: Zap, position: [-1.1, 2.7, 0.5] },
-  { label: 'PCOS', icon: Venus, position: [2.7, 1.9, -0.6] },
-  { label: 'Hair fall', icon: Droplet, position: [3.3, -0.4, 0.7] },
-  { label: 'Stubborn weight', icon: Scale, position: [2.1, -2.1, -0.3] },
-]
-
-/** Restates the connected__diagram spokes as a compact hero card — no new claims. */
-const GUT_CONNECTION_POINTS = [
-  'Digestion & bloating',
-  'Energy & metabolism',
-  'Stress & mood',
-  'Sleep & recovery',
-  'Hormonal health',
-] as const
-
 const TRUST_BADGES = [
   {
     icon: Stethoscope,
@@ -195,25 +181,6 @@ const TRUST_BADGES = [
     title: 'Always responsible',
     detail: 'Never miracle claims',
   },
-] as const
-
-/** Everyday complaints, not diagnoses — validating, not diagnostic. */
-const RECOGNITION_TAGS = [
-  'Stress',
-  'Poor sleep',
-  'Constant tiredness',
-  'Bloating',
-  'Constipation',
-  'IBS-like discomfort',
-  'PCOS',
-  'Hair fall',
-  'Stubborn belly fat',
-  'Difficulty losing weight',
-  'Love handles',
-  'Low mood',
-  'Irregular eating',
-  'Late-night scrolling',
-  'Low energy',
 ] as const
 
 const THEN_NOW_PAIRS = [
@@ -406,29 +373,6 @@ export function HomePage({ onReserve }: { onReserve?: () => void }) {
               </p>
 
               <div className="hero__actions">
-                <LiquidMetalButton
-                  size="lg"
-                  borderWidth={3}
-                  metalConfig={{
-                    colorBack: '#6b6b6f',
-                    colorTint: '#ffffff',
-                    speed: 0.45,
-                    repetition: 4,
-                    distortion: 0.12,
-                  }}
-                  onClick={() => {
-                    if (onReserve) {
-                      onReserve()
-                      return
-                    }
-                    document.getElementById('reserve')?.scrollIntoView({
-                      behavior: 'smooth',
-                      block: 'start',
-                    })
-                  }}
-                >
-                  Reserve a Spot
-                </LiquidMetalButton>
                 <p className="hero__actions-meta">
                   <Shield size={13} strokeWidth={1.75} aria-hidden="true" />
                   Free to attend · one session · no medical jargon
@@ -436,46 +380,14 @@ export function HomePage({ onReserve }: { onReserve?: () => void }) {
               </div>
             </div>
 
-            <div className="hero__visual" data-reveal>
-              <div className="hero__visual-stage">
-                <svg
-                  className="hero__bg-motif"
-                  viewBox="0 0 300 480"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="10"
-                  strokeLinecap="round"
-                  aria-hidden="true"
-                >
-                  <path d="M150 20c-70 0-95 55-45 80 55 27 115-10 118 42 3 55-110 35-118 95-7 52 100 55 95 105-4 40-50 65-50 108" />
-                </svg>
-
-                <div className="hero__problem-cards" aria-hidden="true">
-                  <ProblemCardsScene items={HERO_PROBLEM_CARDS} />
-                </div>
-
-                <div className="hero__gut-card">
-                  <p className="hero__gut-card-eyebrow">The Gut Connection</p>
-                  <h2>
-                    One system.
-                    <br />
-                    Many signals.
-                  </h2>
-                  <ul className="hero__gut-card-list">
-                    {GUT_CONNECTION_POINTS.map((point) => (
-                      <li key={point}>
-                        <Check size={14} strokeWidth={2} aria-hidden="true" />
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="hero__gut-card-tagline">
-                    Understand the connection.
-                    <br />
-                    Change the conversation.
-                  </p>
-                </div>
-              </div>
+            <div className="hero__carousel" data-reveal aria-hidden="true">
+              <CylinderCarousel
+                images={[...HERO_CAROUSEL_IMAGES]}
+                animationDuration={40}
+                cardWidth={220}
+                className="hero__carousel-scene"
+                cardClassName="hero__carousel-card"
+              />
             </div>
           </div>
 
@@ -507,18 +419,28 @@ export function HomePage({ onReserve }: { onReserve?: () => void }) {
             </p>
           </div>
 
-          <ul className="recognition__field" aria-label="Common everyday concerns">
-            {RECOGNITION_TAGS.map((tag, index) => (
-              <li
-                key={tag}
-                className="recognition__tag"
-                data-reveal
-                style={{ transitionDelay: `${(index % 6) * 45}ms` }}
-              >
-                {tag}
-              </li>
-            ))}
-          </ul>
+          <div className="recognition__showcase" data-reveal>
+            <BooksShowcase
+              books={PROBLEM_BOOKS}
+              heroTitle=""
+              navTitle="Everyday signals"
+              showNav={false}
+              showDetailPanel
+              showCarousel
+              themeColors={{
+                navy: '#12181c',
+                pink: '#8eb4c9',
+                cream: '#f6f6f4',
+                lav: '#c5c9d6',
+                peri: '#1c4d6e',
+                bgLight: '#f6f6f4',
+                bgDark: '#f6f6f4',
+                foregroundLight: '#171717',
+                foregroundDark: '#171717',
+              }}
+              className="recognition__books"
+            />
+          </div>
         </section>
 
         {/* Confusion */}
@@ -623,15 +545,6 @@ export function HomePage({ onReserve }: { onReserve?: () => void }) {
               in that system. Not the only cause of everything. The one most
               people never get explained to them.
             </p>
-          </div>
-
-          <div className="connected__diagram" data-reveal aria-hidden="true">
-            <span className="connected__hub">Gut</span>
-            <span className="connected__spoke">Digestion</span>
-            <span className="connected__spoke">Energy</span>
-            <span className="connected__spoke">Mood</span>
-            <span className="connected__spoke">Sleep</span>
-            <span className="connected__spoke">Weight</span>
           </div>
         </section>
 
@@ -741,35 +654,6 @@ export function HomePage({ onReserve }: { onReserve?: () => void }) {
           </div>
         </section>
 
-        {/* Everyday questions carousel */}
-        <section
-          className="section questions-carousel"
-          aria-labelledby="questions-carousel-heading"
-        >
-          <div className="section__narrow" data-reveal>
-            <h2 id="questions-carousel-heading">
-              <HeadingGradient>
-                The questions we hear every week.
-              </HeadingGradient>
-            </h2>
-          </div>
-
-          <div className="questions-carousel__stage" data-reveal>
-            <PerspectiveCarousel
-              items={QUESTION_CAROUSEL}
-              defaultActiveIndex={0}
-              loop
-              showControls={false}
-              slideWidth={200}
-              rotationStep={52}
-              inactiveScale={0.82}
-              className="hero-carousel"
-              labelClassName="hero-carousel__label"
-              imageClassName="hero-carousel__image"
-            />
-          </div>
-        </section>
-
         {/* Questions */}
         <section
           className="section questions"
@@ -862,29 +746,6 @@ export function HomePage({ onReserve }: { onReserve?: () => void }) {
           </div>
         </section>
       </main>
-
-      <footer className="site-footer">
-        <div className="site-footer__inner">
-          <p className="site-footer__disclaimer">
-            Make India Safe provides health education and does not replace
-            individual medical diagnosis, treatment, or professional medical
-            care. Always consult a qualified doctor about your specific
-            symptoms and health history.
-          </p>
-          <nav className="site-footer__links" aria-label="Footer">
-            <a href="#top">About</a>
-            <a href="mailto:hello@makeindiasafe.com">Contact</a>
-            <a href="/privacy">Privacy</a>
-            <a href="/terms">Terms</a>
-          </nav>
-        </div>
-        <div className="home__animated-footer">
-          <AnimatedFooter
-            headingLines={['Make India Safe']}
-            revealOnScroll
-          />
-        </div>
-      </footer>
 
       <CornerBook open={bookOpen} onOpenChange={setBookOpen} />
     </div>

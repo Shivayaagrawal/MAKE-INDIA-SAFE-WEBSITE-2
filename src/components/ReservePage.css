@@ -252,8 +252,21 @@
 }
 
 .reserve__field input[aria-invalid='true'],
-.reserve__field select[aria-invalid='true'] {
+.reserve__field select[aria-invalid='true'],
+.reserve__field textarea[aria-invalid='true'] {
   border-color: #b3261e;
+}
+
+.reserve__word-count {
+  margin: 0;
+  font-family: var(--font-body);
+  font-style: normal;
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+}
+
+.reserve__word-count--over {
+  color: #b3261e;
 }
 
 .reserve__error {

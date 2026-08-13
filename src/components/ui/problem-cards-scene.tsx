@@ -19,7 +19,7 @@ function ProblemCardFace({
 }) {
   return (
     <div className="problem-card-3d">
-      <Icon size={15} strokeWidth={1.75} aria-hidden="true" />
+      <Icon size={14} strokeWidth={1.75} aria-hidden="true" />
       <span>{label}</span>
     </div>
   )
@@ -34,8 +34,8 @@ function Cards({ items }: { items: ProblemCardItem[] }) {
     if (!node) return
     idle.current += delta * 0.05
     const { pointer } = state
-    const targetY = Math.sin(idle.current) * 0.07 + pointer.x * 0.22
-    const targetX = -pointer.y * 0.12
+    const targetY = Math.sin(idle.current) * 0.04 + pointer.x * 0.1
+    const targetX = -pointer.y * 0.06
     node.rotation.y += (targetY - node.rotation.y) * 0.045
     node.rotation.x += (targetX - node.rotation.x) * 0.045
   })
@@ -43,21 +43,21 @@ function Cards({ items }: { items: ProblemCardItem[] }) {
   return (
     <group ref={group}>
       <Sparkles
-        count={34}
-        scale={[6.5, 5.5, 4]}
-        size={1.6}
+        count={28}
+        scale={[4.2, 3.6, 2.4]}
+        size={1.4}
         speed={0.22}
-        opacity={0.3}
+        opacity={0.28}
         color="#1c4d6e"
       />
       {items.map((item, index) => (
         <Billboard key={item.label} position={item.position}>
           <Float
-            speed={0.85 + (index % 3) * 0.22}
-            rotationIntensity={0.12}
-            floatIntensity={0.85 + (index % 4) * 0.18}
+            speed={0.7 + (index % 3) * 0.15}
+            rotationIntensity={0.06}
+            floatIntensity={0.28 + (index % 4) * 0.08}
           >
-            <Html center transform distanceFactor={7.5} occlude={false}>
+            <Html center transform distanceFactor={9.2} occlude={false}>
               <ProblemCardFace label={item.label} icon={item.icon} />
             </Html>
           </Float>
@@ -73,7 +73,7 @@ export function ProblemCardsScene({ items }: { items: ProblemCardItem[] }) {
       className="problem-cards-canvas"
       dpr={[1, 1.75]}
       gl={{ alpha: true, antialias: true }}
-      camera={{ position: [0, 0, 9], fov: 38 }}
+      camera={{ position: [0, 0, 8.6], fov: 34 }}
     >
       <Cards items={items} />
     </Canvas>
