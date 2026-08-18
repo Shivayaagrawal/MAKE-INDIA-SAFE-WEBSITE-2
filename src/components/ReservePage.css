@@ -113,6 +113,13 @@
   max-width: 32rem;
 }
 
+.reserve__intro .reserve__consult {
+  margin-top: 1.15rem;
+  color: var(--ink);
+  font-style: normal;
+  font-weight: 700;
+}
+
 .reserve__form {
   display: flex;
   flex-direction: column;
@@ -324,7 +331,7 @@
 }
 
 .reserve__success p {
-  margin: 0 0 2rem;
+  margin: 0 0 1.15rem;
   color: var(--ink-muted);
   font-style: italic;
 }
@@ -333,4 +340,40 @@
   color: var(--ink);
   font-style: normal;
   font-weight: 600;
+}
+
+.reserve__channel-copy {
+  max-width: 28rem;
+}
+
+.reserve__channel-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 1.35rem;
+  padding: 0.7rem 1.1rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-style: normal;
+  color: #fff;
+  background: #128c7e;
+  text-decoration: none;
+  transition: background 0.2s var(--ease);
+}
+
+.reserve__channel-link:hover {
+  background: #075e54;
+}
+
+.reserve__channel-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.reserve__success .reserve__consult {
+  margin: 0 0 1.75rem;
+  color: var(--ink);
+  font-style: normal;
+  font-weight: 700;
 }

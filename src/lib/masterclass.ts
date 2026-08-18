@@ -7,7 +7,7 @@
 export const CURRENT_MASTERCLASS = {
   topic: 'Diet & Diabetes',
   /** e.g. '12 September 2026'. Leave null until a real date is confirmed. */
-  date: null as string | null,
+  date: '23rd August 2026',
 } as const
 
 export const MASTERCLASS_DATE_CONFIRMED = CURRENT_MASTERCLASS.date !== null

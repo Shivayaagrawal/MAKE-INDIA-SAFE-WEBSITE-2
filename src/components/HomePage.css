@@ -220,6 +220,21 @@
   min-width: 0;
 }
 
+.hero__consult {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0.35rem;
+  width: 100%;
+  margin: 0 0 1.35rem;
+  padding: 0.75rem 1rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  background: color-mix(in srgb, #128c7e 14%, #fff);
+  border-left: 4px solid #075e54;
+}
+
 .hero__carousel {
   min-width: 0;
   width: 100%;
@@ -910,6 +925,16 @@
   font-size: clamp(1.05rem, 2.4vw, 1.35rem);
   font-style: italic;
   color: var(--ink-muted);
+}
+
+.closing p.consultation-line {
+  margin-top: 1.5rem;
+  max-width: 36rem;
+  margin-inline: auto;
+  color: var(--ink);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 1.1rem;
 }
 
 /* ── Mobile tweaks ──────────────────────────────────────── */

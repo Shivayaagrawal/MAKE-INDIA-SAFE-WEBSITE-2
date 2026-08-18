@@ -6,15 +6,16 @@ import {
 import { LiquidMetalButton } from './ui/liquid-metal'
 import { CreepyButton } from './ui/creepy-button'
 import { SessionDateHighlight } from './ui/session-date-highlight'
+import { ConsultationLine, WhatsAppIcon } from './ConsultationLine'
 import { CURRENT_MASTERCLASS, MASTERCLASS_DATE_CONFIRMED } from '@/lib/masterclass'
+import { WHATSAPP_CHANNEL_URL } from '@/lib/contact'
 import {
   countWords,
   isValidEmail,
   isValidIndianPhone,
   MAX_SPEAK_WORDS,
-  normalizeIndianPhone,
+  saveReservation,
 } from '@/lib/reservation'
-import { isSupabaseConfigured, supabase } from '@/lib/supabase'
 import './ReservePage.css'
 
 const INTEREST_OPTIONS = [
@@ -188,39 +189,23 @@ export function ReservePage({ onBack }: ReservePageProps) {
       return
     }
 
-    const phone = normalizeIndianPhone(form.phone)
-    if (!phone) {
-      setErrors((prev) => ({
-        ...prev,
-        phone: 'Enter a valid 10-digit Indian mobile number.',
-      }))
-      return
-    }
-
-    if (!isSupabaseConfigured || !supabase) {
-      setSubmitError(
-        'Reservations are not connected yet. Add your Supabase URL and anon key to .env.',
-      )
-      return
-    }
-
     setSubmitting(true)
-    const { error } = await supabase.from('reservations').insert({
-      first_name: form.firstName.trim(),
-      last_name: form.lastName.trim() || null,
-      email: form.email.trim().toLowerCase(),
-      phone,
-      age: Number(form.age),
-      city: form.city.trim(),
+    const { error } = await saveReservation({
+      firstName: form.firstName,
+      lastName: form.lastName,
+      email: form.email,
+      phone: form.phone,
+      age: form.age,
+      city: form.city,
       interest: form.interest,
-      speak_about: form.speakAbout.trim() || null,
+      speakAbout: form.speakAbout,
       consent: form.consent,
-      masterclass_topic: CURRENT_MASTERCLASS.topic,
+      masterclassTopic: CURRENT_MASTERCLASS.topic,
     })
     setSubmitting(false)
 
     if (error) {
-      setSubmitError('Something went wrong saving your reservation. Please try again.')
+      setSubmitError(error)
       return
     }
 
@@ -261,6 +246,20 @@ export function ReservePage({ onBack }: ReservePageProps) {
               )}
               .
             </p>
+            <p className="reserve__channel-copy">
+              Join the Make India Safe WhatsApp channel for session reminders
+              and updates from Dr. Yokesh Arul.
+            </p>
+            <a
+              className="reserve__channel-link"
+              href={WHATSAPP_CHANNEL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <WhatsAppIcon className="reserve__channel-icon" />
+              Join the WhatsApp channel
+            </a>
+            <ConsultationLine className="reserve__consult" />
             <LiquidMetalButton
               size="sm"
               borderWidth={3}
@@ -290,6 +289,7 @@ export function ReservePage({ onBack }: ReservePageProps) {
                 Tell us a little about yourself so we can shape the session
                 around what you actually need.
               </p>
+              <ConsultationLine className="reserve__consult" />
             </div>
 
             <form className="reserve__form" onSubmit={handleSubmit} noValidate>

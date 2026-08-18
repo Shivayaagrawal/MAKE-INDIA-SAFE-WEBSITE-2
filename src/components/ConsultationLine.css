@@ -1,0 +1,34 @@
+.consultation-line {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-style: normal;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.consultation-line__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-style: normal;
+  font-weight: 800;
+  color: #075e54;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.18em;
+  white-space: nowrap;
+  vertical-align: middle;
+  transition: color 0.2s var(--ease);
+}
+
+.consultation-line__link:hover {
+  color: #054c44;
+}
+
+.consultation-line__icon {
+  width: 1.2em;
+  height: 1.2em;
+  flex-shrink: 0;
+}

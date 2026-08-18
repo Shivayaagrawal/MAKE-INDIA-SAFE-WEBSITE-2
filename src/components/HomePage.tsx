@@ -15,6 +15,7 @@ import GradientText from './ui/gradient-text'
 import { FlipText } from './ui/flip-text'
 import { FaqAccordion, type FaqItem } from './ui/faq-accordion'
 import { SessionDateHighlight } from './ui/session-date-highlight'
+import { ConsultationLine } from './ConsultationLine'
 import { CURRENT_MASTERCLASS } from '@/lib/masterclass'
 import { PROBLEM_BOOKS } from '@/lib/problem-books'
 import './HomePage.css'
@@ -355,6 +356,7 @@ export function HomePage({ onReserve }: { onReserve?: () => void }) {
         <section className="hero" id="top" aria-labelledby="hero-heading">
           <div className="hero__inner">
             <div className="hero__copy" data-reveal>
+              <ConsultationLine className="hero__consult" />
               <h1 id="hero-heading">
                 <HeadingGradient>
                   The answers to your health may begin somewhere you rarely
@@ -743,6 +745,7 @@ export function HomePage({ onReserve }: { onReserve?: () => void }) {
                 {CURRENT_MASTERCLASS.topic}
               </span>
             </p>
+            <ConsultationLine className="closing__consult" />
           </div>
         </section>
       </main>
