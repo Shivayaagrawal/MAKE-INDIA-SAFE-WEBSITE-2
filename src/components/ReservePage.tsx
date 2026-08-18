@@ -259,7 +259,7 @@ export function ReservePage({ onBack }: ReservePageProps) {
               <WhatsAppIcon className="reserve__channel-icon" />
               Join the WhatsApp channel
             </a>
-            <ConsultationLine className="reserve__consult" />
+            <ConsultationLine className="reserve__consult" showChannel={false} />
             <LiquidMetalButton
               size="sm"
               borderWidth={3}

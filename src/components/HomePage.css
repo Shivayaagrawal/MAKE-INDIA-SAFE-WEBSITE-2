@@ -222,12 +222,12 @@
 
 .hero__consult {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.15rem 0.35rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
   width: 100%;
   margin: 0 0 1.35rem;
-  padding: 0.75rem 1rem;
+  padding: 0.85rem 1rem;
   font-size: 1.05rem;
   font-weight: 700;
   color: var(--ink);
@@ -927,14 +927,21 @@
   color: var(--ink-muted);
 }
 
-.closing p.consultation-line {
+.closing .consultation-line {
   margin-top: 1.5rem;
   max-width: 36rem;
   margin-inline: auto;
+  align-items: center;
   color: var(--ink);
   font-style: normal;
   font-weight: 700;
   font-size: 1.1rem;
+}
+
+.closing .consultation-line p {
+  color: var(--ink);
+  font-style: normal;
+  font-weight: 700;
 }
 
 /* ── Mobile tweaks ──────────────────────────────────────── */

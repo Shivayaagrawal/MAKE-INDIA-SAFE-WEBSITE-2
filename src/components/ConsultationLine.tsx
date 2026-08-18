@@ -1,6 +1,7 @@
 import {
   CONSULTATION_PHONE_DISPLAY,
   CONSULTATION_WHATSAPP_URL,
+  WHATSAPP_CHANNEL_URL,
 } from '@/lib/contact'
 import './ConsultationLine.css'
 
@@ -17,19 +18,41 @@ export function WhatsAppIcon({ className }: { className?: string }) {
   )
 }
 
-export function ConsultationLine({ className = '' }: { className?: string }) {
+export function ConsultationLine({
+  className = '',
+  showChannel = true,
+}: {
+  className?: string
+  showChannel?: boolean
+}) {
   return (
-    <p className={`consultation-line ${className}`.trim()}>
-      For a one-to-one consultation with Dr. Yokesh Arul, ping us on{' '}
-      <a
-        href={CONSULTATION_WHATSAPP_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="consultation-line__link"
-      >
-        <WhatsAppIcon className="consultation-line__icon" />
-        {CONSULTATION_PHONE_DISPLAY}
-      </a>
-    </p>
+    <div className={`consultation-line ${className}`.trim()}>
+      <p className="consultation-line__row">
+        For a one-to-one consultation with Dr. Yokesh Arul, ping us on{' '}
+        <a
+          href={CONSULTATION_WHATSAPP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="consultation-line__link"
+        >
+          <WhatsAppIcon className="consultation-line__icon" />
+          {CONSULTATION_PHONE_DISPLAY}
+        </a>
+      </p>
+      {showChannel ? (
+        <p className="consultation-line__row">
+          For further updates on the webinar, join the{' '}
+          <a
+            href={WHATSAPP_CHANNEL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="consultation-line__link consultation-line__link--channel"
+          >
+            <WhatsAppIcon className="consultation-line__icon" />
+            WhatsApp channel
+          </a>
+        </p>
+      ) : null}
+    </div>
   )
 }

@@ -120,6 +120,12 @@
   font-weight: 700;
 }
 
+.reserve__intro .reserve__consult p {
+  color: var(--ink);
+  font-style: normal;
+  font-weight: 700;
+}
+
 .reserve__form {
   display: flex;
   flex-direction: column;
